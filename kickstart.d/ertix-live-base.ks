@@ -138,6 +138,5 @@ xdg-user-dirs-gtk
 -recordmydesktop
 -s390utils
 -grub2-efi-aa64-cdboot
--gstreamer1-plugin-mpg123
 
 %end

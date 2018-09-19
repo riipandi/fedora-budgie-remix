@@ -9,7 +9,7 @@
 perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
 
 # Install the toolchain
-dnf -y install nginx curl livecd-tools pungi {fedora,spin,l10n}-kickstarts
+dnf -y install curl livecd-tools pungi {fedora,spin,l10n}-kickstarts
 
 mkdir -p kickstart.d ; cd kickstart.d
 curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo.ks
@@ -26,8 +26,8 @@ mv fedora-xfce-common.ks remix-budgie-common.ks
 # In the %post section of the kickstart file, add the following as the first line:
 # sed -i -e ‘s/Generic release/Budgie Fedora Remix/g’ /etc/fedora-release /etc/issue
 
-rm -fr /var/cache/live ; \
- livecd-creator --cache=/var/cache/live --config=ertix-live-budgie.ks --fslabel=budgie-remix
+rm -fr /var/cache/live
+livecd-creator --cache=/var/cache/live --config=ertix-live-budgie.ks --fslabel=budgie-remix
 
 livemedia-creator \
  --ks kickstart.d/remix-live-budgie.ks \
