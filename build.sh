@@ -6,15 +6,16 @@
 # https://opensourceforu.com/2010/01/roll-out-a-fedora-remix/
 # http://weldr.io/lorax/livemedia-creator.html
 
-# Set selinux mode to permissive
-perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
-
 # Install the toolchain
 dnf -y install kernel-modules-$(uname -r) mock curl livecd-tools pungi \
  {fedora,spin,l10n}-kickstarts pykickstart anaconda lorax virt-install \
   libvirt-daemon-config-network
 
 usermod -a -G mock ariss
+
+
+# Set selinux mode to permissive
+perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
 
 # Get kickstarts
 git clone https://pagure.io/fedora-kickstarts.git fedora-ks -b f28
@@ -35,8 +36,6 @@ rm -fr /var/livebuild ; mkdir -p /tmp/livebuild
 livemedia-creator \
  --ks ertix-budgie.ks \
  --logfile /tmp/livebuild.log \
- --tmp /tmp/livebuild \
- --resultdir /var/livebuild \
  --project "Fedora Budgie Remix"  \
  --volid "Fedora Budgie Remix x64" \
  --title "Fedora Budgie Remix" \
