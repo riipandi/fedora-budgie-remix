@@ -27,8 +27,8 @@ mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart git
 mock -r fedora-28-x86_64 --shell --old-chroot
 
 # Chroot: Flatten a Kickstart
-git clone https://github.com/riipandi/fedora-budgie-remix
-ksflatten --config budgie-ks/main.ks -o ertix-budgie.ks --version F28
+cd /usr/src; git clone https://github.com/riipandi/fedora-budgie-remix.git .
+ksflatten --config kickstart.d/ertix-live-budgie.ks -o ertix-budgie.ks --version F28
 
 # Chroot: Create the Live Image
 rm -fr /var/livebuild ; mkdir -p /tmp/livebuild
@@ -45,8 +45,8 @@ livemedia-creator \
  --no-virt --macboot
 
 # Compose Results and cleanup
-cp /var/lib/mock/fedora-27-x86_64/root/var/lmc/*.iso $HOME
-mock -r fedora-27-x86_64 --clean
+cp /var/lib/mock/fedora-28-x86_64/root/var/lmc/*.iso $HOME
+mock -r fedora-28-x86_64 --clean
 
 # Old method
 mkdir -p kickstart.d ; cd kickstart.d
