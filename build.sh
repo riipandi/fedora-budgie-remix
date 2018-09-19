@@ -5,9 +5,6 @@
 # https://wiki.sugarlabs.org/go/Build_Your_Own_Remix_with_Fedora
 # https://opensourceforu.com/2010/01/roll-out-a-fedora-remix/
 
-# Deploy in vultr
-ssh root@139.180.208.215
-
 # Set selinux mode to permissive
 perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
 
