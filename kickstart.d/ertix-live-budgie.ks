@@ -13,9 +13,11 @@
 
 # Budgie Repo by Alunux
 repo --name="Budgie Desktop Stable by alunux" --baseurl=https://copr-be.cloud.fedoraproject.org/results/alunux/budgie-desktop-stable/fedora-$releasever-$basearch/ --cost=0
+repo --name="Etcher Electron" --baseurl=https://resin-io.bintray.com/redhat --cost=0
 
 %packages
 
+etcher-electron
 gnome-backgrounds
 gnome-bluetooth
 gnome-calculator
