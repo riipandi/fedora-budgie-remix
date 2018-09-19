@@ -21,13 +21,13 @@ mock -r fedora-28-x86_64 --init
 mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart
 
 # Get kickstarts
-git clone https://pagure.io/fedora-kickstarts.git fedora-kickstarts -b f28
+git clone https://pagure.io/fedora-kickstarts.git fedora-ks -b f28
 
 # Running a Compose
 mock -r fedora-28-x86_64 --shell --old-chroot
 
 # Chroot: Flatten a Kickstart
-ksflatten --config fedora-live-xfce.ks -o flat-fedora-live-xfce.ks --version F28
+ksflatten --config fedora-ks/fedora-live-xfce.ks -o fedora-xfce.ks --version F28
 
 # Chroot: Create the Live Image
 mkdir -p /{var,tmp}/livebuild
