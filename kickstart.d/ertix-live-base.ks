@@ -7,6 +7,7 @@
 # - Aris Ripandi      <ripandi@pm.me>
 
 %include ertix-repo-base.ks
+%include ertix-base.ks
 
 %packages
 
@@ -22,30 +23,21 @@ at-spi2-atk
 at-spi2-core
 avahi
 baobab
-binutils
-bsdtar
-ca-certificates
 caribou
 caribou-gtk2-module
 caribou-gtk3-module
 chromium
-copr-cli
-crudini
-curl
 dconf
 desktop-backgrounds-gnome
-elinks
 evince
 evince-djvu
 evince-nautilus
 exfat-utils
 fedora-workstation-backgrounds
-ffmpeg
 file-roller
 file-roller-nautilus
 firefox
 frei0r-plugins
-ftp
 fuse-exfat
 geany
 glibc-all-langpacks
@@ -80,9 +72,6 @@ libXScrnSaver
 lrzsz
 ModemManager
 mousetweaks
-mozilla-fira-fonts-common
-mozilla-fira-mono-fonts
-mozilla-fira-sans-fonts
 nautilus
 nautilus-sendto
 NetworkManager-iodine-gnome
@@ -93,13 +82,9 @@ NetworkManager-openvpn-gnome
 NetworkManager-pptp-gnome
 NetworkManager-ssh-gnome
 NetworkManager-vpnc-gnome
-nscd
 nss-tools
-ntpdate
-openssh
 PackageKit-command-not-found
 PackageKit-gtk3-module
-perl
 pinentry-gnome3
 powerline-fonts
 ppp
@@ -124,14 +109,11 @@ simple-scan
 sushi
 tracker
 tracker-miners
-unrar
-whois
 wvdial
 xdg-desktop-portal
 xdg-desktop-portal-gtk
 xdg-user-dirs
 xdg-user-dirs-gtk
-xmlstarlet
 
 # save some space
 -autofs
