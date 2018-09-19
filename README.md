@@ -1,5 +1,4 @@
-# Kickstart files for Poliba Corse OS
+# Kickstart files for Fedora Budgie Remix
 
-These files composes Poliba Corse OS from Fedora repositories. 
+These files composes Budgie Remix from Fedora repositories.
 To use them effectively, please look at pykickstart and lorax documentation.
-
