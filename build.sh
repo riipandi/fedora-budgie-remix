@@ -16,23 +16,24 @@ dnf -y install kernel-modules-$(uname -r) mock curl livecd-tools pungi \
 
 usermod -a -G mock ariss
 
+# Get kickstarts
+git clone https://pagure.io/fedora-kickstarts.git fedora-ks -b f28
+
 # Init Environment: run as general user
 mock -r fedora-28-x86_64 --init
 mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart
-
-# Get kickstarts
-git clone https://pagure.io/fedora-kickstarts.git fedora-ks -b f28
 
 # Running a Compose
 mock -r fedora-28-x86_64 --shell --old-chroot
 
 # Chroot: Flatten a Kickstart
-ksflatten --config fedora-ks/fedora-live-xfce.ks -o fedora-xfce.ks --version F28
+rm fedora-xfce.ks  ; ksflatten --config fedora-ks/fedora-live-xfce.ks -o fedora-xfce.ks --version F28
+rm ertix-budgie.ks ; ksflatten --config budgie-ks/main.ks -o ertix-budgie.ks --version F28
 
 # Chroot: Create the Live Image
-mkdir -p /{var,tmp}/livebuild
+rm -fr /var/livebuild ; mkdir -p /tmp/livebuild
 livemedia-creator \
- --ks ertix-live-budgie.ks \
+ --ks ertix-budgie.ks \
  --logfile /tmp/livebuild.log \
  --tmp /tmp/livebuild \
  --resultdir /var/livebuild \

@@ -5,5 +5,5 @@
 #
 
 lang en_US.UTF-8
-keyboard it
-timezone Europe/Rome
+keyboard us
+timezone Asia/Jakarta
