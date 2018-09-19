@@ -21,14 +21,14 @@ git clone https://pagure.io/fedora-kickstarts.git fedora-ks -b f28
 
 # Init Environment: run as general user
 mock -r fedora-28-x86_64 --init
-mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart
+mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart git
 
 # Running a Compose
 mock -r fedora-28-x86_64 --shell --old-chroot
 
 # Chroot: Flatten a Kickstart
-rm fedora-xfce.ks  ; ksflatten --config fedora-ks/fedora-live-xfce.ks -o fedora-xfce.ks --version F28
-rm ertix-budgie.ks ; ksflatten --config budgie-ks/main.ks -o ertix-budgie.ks --version F28
+git clone https://github.com/riipandi/fedora-budgie-remix
+ksflatten --config budgie-ks/main.ks -o ertix-budgie.ks --version F28
 
 # Chroot: Create the Live Image
 rm -fr /var/livebuild ; mkdir -p /tmp/livebuild
