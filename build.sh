@@ -4,12 +4,18 @@
 # https://docs.fedoraproject.org/f28/install-guide/appendixes/Kickstart_Syntax_Reference.html
 # https://wiki.sugarlabs.org/go/Build_Your_Own_Remix_with_Fedora
 # https://opensourceforu.com/2010/01/roll-out-a-fedora-remix/
+# http://weldr.io/lorax/livemedia-creator.html
 
 # Set selinux mode to permissive
 perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
 
 # Install the toolchain
-dnf -y install curl livecd-tools pungi {fedora,spin,l10n}-kickstarts
+dnf -y install kernel-modules-$(uname -r) mock curl livecd-tools pungi {fedora,spin,l10n}-kickstarts
+usermod -a -G mock ariss
+
+# Init Environment: run as general user
+mock -r fedora-27-x86_64 --init
+mock -r fedora-27-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart
 
 mkdir -p kickstart.d ; cd kickstart.d
 curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo.ks
@@ -27,15 +33,15 @@ mv fedora-xfce-common.ks remix-budgie-common.ks
 # sed -i -e ‘s/Generic release/Budgie Fedora Remix/g’ /etc/fedora-release /etc/issue
 
 rm -fr /var/cache/live
-livecd-creator --cache=/var/cache/live --config=ertix-live-budgie.ks --fslabel=budgie-remix
 
 livemedia-creator \
- --ks kickstart.d/remix-live-budgie.ks \
- --logfile /tmp/livemedia-out.log \
- --no-virt --resultdir /tmp/livebuild \
- --project Fedora-soas-Live --make-iso \
- --volid Fedora-SoaS-flat-live \
- --iso-only --iso-name Fedora-SoaS-flat-live.iso \
- --releasever 24 \
- --title Fedora-SoaS-flat-live \
- --macboot
+ --ks ertix-live-budgie.ks \
+ --logfile /tmp/livebuild.log \
+ --resultdir /tmp/livebuild \
+ --project "Fedora Budgie Remix"  \
+ --volid "Fedora Budgie Remix x64" \
+ --title "Fedora Budgie Remix"
+ --make-iso --iso-only --releasever 28 \
+ --iso-name fedora-budgie-live.iso \
+ --no-virt --macboot
+
