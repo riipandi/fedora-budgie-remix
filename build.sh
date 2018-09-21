@@ -66,12 +66,15 @@ livecd-creator -c remix-budgie.ks \
  --fslabel=budgie-remix \
  --releasever=28
 
+useradd -mg wheel -s `which bash` bela -c "Nabila Azmi" -p `openssl passwd -1 "azmi"`
 
+cat >> /etc/rc.d/init.d/livesys << EOF
 
 rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.background.fedora.gschema.override
 rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.screensaver.fedora.gschema.override
 
-cat > /usr/share/glib-2.0/schemas/10_org.gnome.desktop.gschema.override <<EOF
+# Budgie customization
+cat > /usr/share/glib-2.0/schemas/10_org.gnome.desktop.gschema.override <<FOE
 [org.gnome.desktop.background]
 picture-uri = 'file:///usr/share/backgrounds/fedora-workstation/paisaje.jpg'
 
@@ -89,9 +92,9 @@ monospace-font-name = 'Fira Mono Regular 11'
 [org.gnome.desktop.wm.preferences]
 theme = 'Pop'
 titlebar-font = 'Fira Sans SemiBold 10'
-EOF
+FOE
 
-cat > /usr/share/glib-2.0/schemas/10_com.solus-project.gschema.override <<EOF
+cat > /usr/share/glib-2.0/schemas/10_com.solus-project.gschema.override <<FOE
 [com.solus-project.budgie-panel]
 migration-level=1
 panels=['de697aa0-bd86-11e8-a4e0-b0c0903cd2bd']
@@ -106,6 +109,13 @@ pinned-launchers=['com.gexperts.Tilix.desktop', 'org.gnome.Nautilus.desktop', 'c
 
 [com.solus-project.budgie-wm]
 button-layout='appmenu:minimize,maximize,close'
-EOF
+FOE
 
-useradd -mg wheel -s `which bash` bela -c "Nabila Azmi" -p `openssl passwd -1 "azmi"`
+# Rebuild schema cache with any overrides we installed
+glib-compile-schemas /usr/share/glib-2.0/schemas
+
+# Make sure to set the right permissions and selinux contexts
+chown -R liveuser:liveuser /home/liveuser/
+restorecon -R /home/liveuser/
+
+EOF
