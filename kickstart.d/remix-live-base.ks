@@ -92,7 +92,6 @@ libcurl
 libpng12
 libproxy-mozjs
 librsvg2
-libsane-hpaio
 libva-intel-driver
 libXScrnSaver
 lrzsz
@@ -121,9 +120,6 @@ qt-x11
 rdist
 rp-pppoe
 rygel
-sane-backends
-sane-backends-drivers-scanners
-sane-backends-libs
 scl-utils
 screen
 screenfetch

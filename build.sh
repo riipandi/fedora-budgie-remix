@@ -60,7 +60,13 @@ curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo-not-rawhide.
 mv fedora-repo-not-rawhide.ks fedora-repo.ks
 
 ksflatten --config kickstart.d/remix-budgie-live.ks -o remix-budgie.ks --version F28
-livecd-creator --cache=/var/cache/live --config=remix-budgie.ks --fslabel=budgie-remix
+livecd-creator -c remix-budgie.ks \
+ --cache=/var/cache/live \
+ --logfile=livebuild.log \
+ --fslabel=budgie-remix \
+ --releasever=28
+
+
 
 rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.background.fedora.gschema.override
 rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.screensaver.fedora.gschema.override

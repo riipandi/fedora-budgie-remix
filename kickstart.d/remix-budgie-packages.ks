@@ -80,6 +80,5 @@ vokoscreen
 -setroubleshoot
 -system-config-language
 -system-config-users
--yelp
 
 %end
