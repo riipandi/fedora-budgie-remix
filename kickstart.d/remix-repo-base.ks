@@ -1,15 +1,15 @@
-# ertix-repo-base.ks
+# remix-repo-base.ks
 #
 # Description:
-# - Fedora Live Spin with Budgie Desktop Environment
+# - Fedora Remix with Budgie Desktop Environment
 #
 # Maintainer(s):
 # - Aris Ripandi      <ripandi@pm.me>
 
 # Fedora
-#repo --name="Fedora $releasever - $basearch" --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-#repo --name="Fedora $releasever - $basearch - Updates" --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
-#url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+repo --name="Fedora" --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+repo --name="Fedora Updates" --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
 
 # RPMFusion
 repo --name="RPM Fusion Free" --baseurl=http://download1.rpmfusion.org/free/fedora/releases/$releasever/Everything/$basearch/os --cost=1000

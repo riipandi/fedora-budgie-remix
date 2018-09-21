@@ -1,3 +1,11 @@
+# remix-budgie-packages.ks
+#
+# Description:
+# - Fedora Remix with Budgie Desktop Environment
+#
+# Maintainer(s):
+# - Aris Ripandi      <ripandi@pm.me>
+#
 # Common packages removed from comps
 # For F14, these removals should be moved to comps itself
 

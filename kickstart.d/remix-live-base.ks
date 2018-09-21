@@ -1,8 +1,169 @@
+# remix-budgie-packages.ks
 #
-# Live OS Configuration
+# Description:
+# - Fedora Remix with Budgie Desktop Environment
 #
-# part of Poliba Corse OS
+# Maintainer(s):
+# - Aris Ripandi      <ripandi@pm.me>
 #
+# Defines the basics for all kickstarts in the fedora-live branch
+# Does not include package selection (other then mandatory)
+# Does not include localization packages or configuration
+#
+# Does includes "default" language configuration (kickstarts including
+# this template can override these settings)
+
+lang en_US.UTF-8
+keyboard us
+timezone Asia/Jakarta
+auth --useshadow --passalgo=sha512
+selinux --enforcing
+firewall --enabled --service=mdns
+xconfig --startxonboot
+zerombr
+clearpart --all
+part / --size 9216 --fstype ext4
+services --enabled=NetworkManager,ModemManager --disabled=sshd
+network --bootproto=dhcp --device=link --activate
+rootpw --lock --iscrypted locked
+shutdown
+
+%include remix-repo-base.ks
+
+%packages
+
+@base-x
+@guest-desktop-agents
+@standard
+@core
+@fonts
+@input-methods
+@dial-up
+@multimedia
+@hardware-support
+@printing
+@development-tools
+@development-libs
+
+# Some extra packages
+adwaita-qt4
+adwaita-qt5
+at-spi2-atk
+at-spi2-core
+avahi
+binutils
+bsdtar
+ca-certificates
+caribou
+caribou-gtk2-module
+caribou-gtk3-module
+copr-cli
+crudini
+curl
+elinks
+exfat-utils
+fedora-workstation-backgrounds
+ffmpeg
+frei0r-plugins
+ftp
+fuse-exfat
+glibc-all-langpacks
+glib-networking
+gstreamer1-plugins-bad-free
+gstreamer1-plugins-bad-free-extras
+gstreamer1-plugins-bad-nonfree
+gstreamer1-plugins-good
+gstreamer1-plugins-good-extras
+gvfs-afc
+gvfs-afp
+gvfs-archive
+gvfs-fuse
+gvfs-goa
+gvfs-gphoto2
+gvfs-mtp
+gvfs-smb
+ibus-gtk2
+ibus-gtk3
+ibus-qt
+lame
+libcanberra-gtk2
+libcanberra-gtk3
+libcurl
+libpng12
+libproxy-mozjs
+librsvg2
+libsane-hpaio
+libva-intel-driver
+libXScrnSaver
+lrzsz
+ModemManager
+mousetweaks
+mozilla-fira-fonts-common
+mozilla-fira-mono-fonts
+mozilla-fira-sans-fonts
+nscd
+nss-tools
+ntpdate
+openssh
+PackageKit-command-not-found
+PackageKit-gtk3-module
+perl
+powerline-fonts
+ppp
+qgnomeplatform
+qt
+qt5-qtbase
+qt5-qtbase-gui
+qt5-qtdeclarative
+qt5-qtxmlpatterns
+qt-settings
+qt-x11
+rdist
+rp-pppoe
+rygel
+sane-backends
+sane-backends-drivers-scanners
+sane-backends-libs
+scl-utils
+screen
+screenfetch
+simple-mtpfs
+simple-scan
+tracker
+tracker-miners
+unrar
+whois
+wvdial
+xmlstarlet
+xclip
+xsel
+
+# Explicitly specified here:
+# <notting> walters: because otherwise dependency loops cause yum issues.
+kernel
+kernel-modules
+kernel-modules-extra
+
+# This was added a while ago, I think it falls into the category of
+# "Diagnosis/recovery tool useful from a Live OS image".  Leaving this untouched
+# for now.
+memtest86+
+
+# The point of a live image is to install
+anaconda
+@anaconda-tools
+
+# Need aajohan-comfortaa-fonts for the SVG rnotes images
+aajohan-comfortaa-fonts
+
+# Without this, initramfs generation during live image creation fails: #1242586
+dracut-live
+syslinux
+
+# anaconda needs the locales available to run for different locales
+glibc-all-langpacks
+
+%end
 
 %post
 # FIXME: it'd be better to get this installed from a package
@@ -116,7 +277,7 @@ if [ -n "\$configdone" ]; then
 fi
 
 # add liveuser user with no passwd
-action "Adding live user" useradd \$USERADDARGS -c "Poliba Corse" liveuser
+action "Adding live user" useradd \$USERADDARGS -c "Live System User" liveuser
 passwd -d liveuser > /dev/null
 usermod -aG wheel liveuser > /dev/null
 
@@ -158,7 +319,7 @@ touch /.liveimg-configured
 # https://bugzilla.redhat.com/show_bug.cgi?id=679486
 # the hostname must be something else than 'localhost'
 # https://bugzilla.redhat.com/show_bug.cgi?id=1370222
-echo "polibacorse-os" > /etc/hostname
+echo "localhost-live" > /etc/hostname
 
 EOF
 
@@ -275,6 +436,7 @@ touch /etc/machine-id
 
 %end
 
+
 %post --nochroot
 cp $INSTALL_ROOT/usr/share/licenses/*-release/* $LIVE_ROOT/
 
@@ -283,56 +445,5 @@ if [ "$(uname -i)" = "i386" -o "$(uname -i)" = "x86_64" ]; then
   if [ ! -d $LIVE_ROOT/LiveOS ]; then mkdir -p $LIVE_ROOT/LiveOS ; fi
   cp /usr/bin/livecd-iso-to-disk $LIVE_ROOT/LiveOS
 fi
-
-%end
-
-%post
-cat >> /etc/rc.d/init.d/livesys << EOF
-# disable updates plugin
-cat >> /usr/share/glib-2.0/schemas/org.gnome.software.gschema.override << FOE
-[org.gnome.software]
-download-updates=false
-FOE
-# don't run gnome-initial-setup
-mkdir ~liveuser/.config
-touch ~liveuser/.config/gnome-initial-setup-done
-# make the installer show up
-if [ -f /usr/share/applications/liveinst.desktop ]; then
-  # Show harddisk install in shell dash
-  sed -i -e 's/NoDisplay=true/NoDisplay=false/' /usr/share/applications/liveinst.desktop ""
-  # need to move it to anaconda.desktop to make shell happy
-  mv /usr/share/applications/liveinst.desktop /usr/share/applications/anaconda.desktop
-  cat > /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
-[org.gnome.shell]
-favorite-apps=['chromium-browser.desktop', 'org.gnome.Nautilus.desktop', 'org.qt-project.qtcreator.desktop', 'telegram-desktop.desktop']
-FOE
-
-  # Make the welcome screen show up
-  if [ -f /usr/share/anaconda/gnome/fedora-welcome.desktop ]; then
-    mkdir -p ~liveuser/.config/autostart
-    cp /usr/share/anaconda/gnome/fedora-welcome.desktop /usr/share/applications/
-    cp /usr/share/anaconda/gnome/fedora-welcome.desktop ~liveuser/.config/autostart/
-  fi
-  # Copy Anaconda branding in place
-  if [ -d /usr/share/lorax/product/usr/share/anaconda ]; then
-    cp -a /usr/share/lorax/product/* /
-  fi
-fi
-# rebuild schema cache with any overrides we installed
-glib-compile-schemas /usr/share/glib-2.0/schemas
-# set up auto-login
-cat > /etc/gdm/custom.conf << FOE
-[daemon]
-AutomaticLoginEnable=True
-AutomaticLogin=liveuser
-FOE
-# Turn off PackageKit-command-not-found while uninstalled
-if [ -f /etc/PackageKit/CommandNotFound.conf ]; then
-  sed -i -e 's/^SoftwareSourceSearch=true/SoftwareSourceSearch=false/' /etc/PackageKit/CommandNotFound.conf
-fi
-# make sure to set the right permissions and selinux contexts
-chown -R liveuser:liveuser /home/liveuser/
-restorecon -R /home/liveuser/
-EOF
 
 %end

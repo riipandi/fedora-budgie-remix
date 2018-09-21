@@ -9,10 +9,10 @@
 # Install the toolchain
 dnf -y install kernel-modules-$(uname -r) mock curl livecd-tools pungi \
  {fedora,spin,l10n}-kickstarts pykickstart anaconda lorax virt-install \
-  libvirt-daemon-config-network
+  libvirt-daemon-config-network lorax virt-install appliance-tools
 
+systemctl restart libvirtd
 usermod -a -G mock ariss
-
 
 # Set selinux mode to permissive
 perl -pi -e 's#(SELINUX=)(.*)#${1}permissive#' /etc/selinux/config
@@ -28,8 +28,8 @@ mock -r fedora-28-x86_64 --install lorax-lmc-novirt vim-minimal pykickstart git
 mock -r fedora-28-x86_64 --shell --old-chroot
 
 # Chroot: Flatten a Kickstart
-cd /usr/src; git clone https://github.com/riipandi/fedora-budgie-remix.git .
-ksflatten --config kickstart.d/ertix-live-budgie.ks -o ertix-budgie.ks --version F28
+cd /usr/src; git clone https://github.com/riipandi/fedora-budgie-remix.git fbr
+ksflatten --config fbr/kickstart.d/ertix-live-budgie.ks -o ertix-budgie.ks --version F28
 
 # Chroot: Create the Live Image
 rm -fr /var/livebuild ; mkdir -p /tmp/livebuild
@@ -48,17 +48,58 @@ cp /var/lib/mock/fedora-28-x86_64/root/var/lmc/*.iso $HOME
 mock -r fedora-28-x86_64 --clean
 
 # Old method
-mkdir -p kickstart.d ; cd kickstart.d
-curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo.ks
+mkdir -p f28 ; cd $_
+curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-arm-base.ks
+curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-arm-xbase.ks
+curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-arm-xfce.ks
 curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-live-base.ks
 curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-live-minimization.ks
-curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo-not-rawhide.ks
-curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo-rawhide.ks
-curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-xfce-common.ks
 curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-live-xfce.ks
+curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-xfce-common.ks
+curl -sLO https://pagure.io/fedora-kickstarts/raw/f28/f/fedora-repo-not-rawhide.ks
+mv fedora-repo-not-rawhide.ks fedora-repo.ks
 
-mv fedora-live-xfce.ks remix-live-budgie.ks
-mv fedora-xfce-common.ks remix-budgie-common.ks
+ksflatten --config kickstart.d/remix-budgie-live.ks -o remix-budgie.ks --version F28
+livecd-creator --cache=/var/cache/live --config=remix-budgie.ks --fslabel=budgie-remix
 
-# In the %post section of the kickstart file, add the following as the first line:
-# sed -i -e ‘s/Generic release/Budgie Fedora Remix/g’ /etc/fedora-release /etc/issue
+rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.background.fedora.gschema.override
+rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.screensaver.fedora.gschema.override
+
+cat > /usr/share/glib-2.0/schemas/10_org.gnome.desktop.gschema.override <<EOF
+[org.gnome.desktop.background]
+picture-uri = 'file:///usr/share/backgrounds/fedora-workstation/paisaje.jpg'
+
+[org.gnome.desktop.screensaver]
+picture-uri = 'file:///usr/share/backgrounds/f28/default/f28.xml'
+
+[org.gnome.desktop.interface]
+gtk-theme = 'Arc-Darker'
+icon-theme = 'Pop'
+cursor-theme = 'Pop'
+font-name = 'Fira Sans Book 10'
+document-font-name = 'Roboto Slab Regular 11'
+monospace-font-name = 'Fira Mono Regular 11'
+
+[org.gnome.desktop.wm.preferences]
+theme = 'Pop'
+titlebar-font = 'Fira Sans SemiBold 10'
+EOF
+
+cat > /usr/share/glib-2.0/schemas/10_com.solus-project.gschema.override <<EOF
+[com.solus-project.budgie-panel]
+migration-level=1
+panels=['de697aa0-bd86-11e8-a4e0-b0c0903cd2bd']
+
+[com.solus-project.budgie-panel.panel]
+location='bottom'
+transparency='none'
+size=36
+
+[com.solus-project.icon-tasklist]
+pinned-launchers=['com.gexperts.Tilix.desktop', 'org.gnome.Nautilus.desktop', 'chromium-browser.desktop']
+
+[com.solus-project.budgie-wm]
+button-layout='appmenu:minimize,maximize,close'
+EOF
+
+useradd -mg wheel -s `which bash` bela -c "Nabila Azmi" -p `openssl passwd -1 "azmi"`
