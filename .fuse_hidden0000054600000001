@@ -19,5 +19,6 @@ livecd-creator -c remix-budgie.ks \
  --cache=/var/cache/live \
  --logfile=livebuild.log \
  --fslabel=budgie-remix \
- --releasever=$VERSION \
- --verbose
+ --releasever=$VERSION
+
+# useradd -mg wheel -s `which bash` bela -c "Nabila Azmi" -p `openssl passwd -1 "azmi"`
