@@ -1,7 +1,8 @@
 #!/bin/bash
 
 VERSION="28"
-ISOFILE="f$VERSION-budgie"
+FSLABEL="fedora-budgie-remix"
+ISOFILE="f$VERSION-budgie-x64"
 
 if [[ $EUID -ne 0 ]]; then echo -e 'This script must be run as root' ; exit 1 ; fi
 
@@ -17,11 +18,12 @@ ksflatten \
  -o $pwddir/remix-budgie.ks --version F$VERSION
 
 livecd-creator -c remix-budgie.ks \
+ --title="Fedora Budgie Remix" \
  --cache=/var/cache/live \
  --logfile=livebuild.log \
- --fslabel=fedora-budgie-remix \
- --title="Fedora Budgie Remix"
+ --fslabel=$FSLABEL \
  --releasever=$VERSION \
  --verbose
 
-# sha1sum $ISOFILE.iso > $ISOFILE.sum
+mv $FSLABEL.iso $ISOFILE.iso
+sha1sum $ISOFILE.iso > $ISOFILE.sum
