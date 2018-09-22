@@ -27,13 +27,6 @@ rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.screensaver.fedora.gschem
 
 cat >> /etc/rc.d/init.d/livesys << EOF
 
-# disable screensaver locking (#674410)
-cat >> /home/liveuser/.xscreensaver << FOE
-mode:           off
-lock:           False
-dpmsEnabled:    False
-FOE
-
 # deactivate budgie-screensaver
 rm -f /etc/xdg/autostart/budgie-desktop-screensaver.desktop || :
 
@@ -79,7 +72,6 @@ FOE
 cat > /usr/share/glib-2.0/schemas/10_com.solus-project.gschema.override <<FOE
 [com.solus-project.budgie-panel]
 migration-level=1
-panels=['de697aa0-bd86-11e8-a4e0-b0c0903cd2bd']
 
 [com.solus-project.budgie-panel.panel]
 location='bottom'
