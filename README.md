@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://sourceforge.net/projects/fedora-budgie-remix/files/latest/download"><img alt="Download Fedora Budgie Remix" src="https://a.fsdn.com/con/app/sf-download-button" width=276 height=48 srcset="https://a.fsdn.com/con/app/sf-download-button?button_size=2x 2x"></a>
+</p>
+
 # Kickstart files for Fedora Budgie Remix
 
 These files composes Budgie Remix from Fedora repositories.
