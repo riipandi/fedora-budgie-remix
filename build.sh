@@ -24,4 +24,4 @@ livecd-creator -c remix-budgie.ks \
  --releasever=$VERSION \
  --verbose
 
-sha1sum $ISOFILE.iso > $ISOFILE.sum
+# sha1sum $ISOFILE.iso > $ISOFILE.sum
