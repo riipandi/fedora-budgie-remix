@@ -20,32 +20,28 @@ rm -f /usr/share/glib-2.0/schemas/10_org.gnome.desktop.screensaver.fedora.gschem
 
 # sed -i "s|\("^Out" * *\).*|\1\${HOME}/Documents|" /etc/cups/cups-pdf.conf
 
-#cat > /etc/sysconfig/desktop <<EOF
-#PREFERRED=/usr/bin/startx
-#DISPLAYMANAGER=/usr/sbin/lightdm
-#EOF
-
 cat >> /etc/rc.d/init.d/livesys << EOF
+
+# disable gnome-software automatically downloading updates
+cat >> /usr/share/glib-2.0/schemas/org.gnome.software.gschema.override << FOE
+[org.gnome.software]
+download-updates=false
+FOE
+
+# don't autostart gnome-software session service
+rm -f /etc/xdg/autostart/gnome-software-service.desktop
 
 # deactivate budgie-screensaver
 rm -f /etc/xdg/autostart/budgie-desktop-screensaver.desktop || :
-
-# set up lightdm autologin
-sed -i 's/^#autologin-user=.*/autologin-user=liveuser/' /etc/lightdm/lightdm.conf
-sed -i 's/^#autologin-user-timeout=.*/autologin-user-timeout=0/' /etc/lightdm/lightdm.conf
 
 # set Budgie as default session, otherwise login will fail
 # sed -i 's/^#user-session=.*/user-session=budgie/' /etc/lightdm/lightdm.conf
 
 # Show harddisk install on the desktop
+mkdir -p /home/liveuser/Desktop
 sed -i -e 's/NoDisplay=true/NoDisplay=false/' /usr/share/applications/liveinst.desktop
-mkdir /home/liveuser/Desktop
 cp /usr/share/applications/liveinst.desktop /home/liveuser/Desktop
-
-# no updater applet in live environment
-rm -f /etc/xdg/autostart/org.mageia.dnfdragora-updater.desktop
-
-# and mark it as executable
+chown liveuser: /home/liveuser/Desktop/liveinst.desktop
 chmod +x /home/liveuser/Desktop/liveinst.desktop
 
 # Budgie customization
@@ -88,7 +84,11 @@ FOE
 # Rebuild schema cache with any overrides we installed
 glib-compile-schemas /usr/share/glib-2.0/schemas
 
-# this goes at the end after all other changes.
+# set up auto-login
+sed -i 's/^#autologin-user=.*/autologin-user=liveuser/' /etc/lightdm/lightdm.conf
+sed -i 's/^#autologin-user-timeout=.*/autologin-user-timeout=0/' /etc/lightdm/lightdm.conf
+
+# make sure to set the right permissions and selinux contexts
 chown -R liveuser:liveuser /home/liveuser
 restorecon -R /home/liveuser
 
