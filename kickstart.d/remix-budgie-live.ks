@@ -37,13 +37,6 @@ rm -f /etc/xdg/autostart/budgie-desktop-screensaver.desktop || :
 # set Budgie as default session, otherwise login will fail
 # sed -i 's/^#user-session=.*/user-session=budgie/' /etc/lightdm/lightdm.conf
 
-# Show harddisk install on the desktop
-mkdir -p /home/liveuser/Desktop
-sed -i -e 's/NoDisplay=true/NoDisplay=false/' /usr/share/applications/liveinst.desktop
-cp /usr/share/applications/liveinst.desktop /home/liveuser/Desktop
-chown liveuser: /home/liveuser/Desktop/liveinst.desktop
-chmod +x /home/liveuser/Desktop/liveinst.desktop
-
 # Budgie customization
 cat > /usr/share/glib-2.0/schemas/10_org.gnome.desktop.gschema.override <<FOE
 [org.gnome.desktop.background]

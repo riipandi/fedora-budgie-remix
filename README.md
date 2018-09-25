@@ -106,6 +106,6 @@ mv fedora-repo-not-rawhide.ks fedora-repo.ks
 
 ## Disclaimer
 
-Linux is a registered trademark of Linus Torvalds. Fedora and the Infinity 
-design logo are trademarks of Red Hat, Inc. This project is not affiliated 
+Linux is a registered trademark of Linus Torvalds. Fedora and the Infinity
+design logo are trademarks of Red Hat, Inc. This project is not affiliated
 with Linus Torvalds or Red Hat, Inc.
