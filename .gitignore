@@ -2,5 +2,6 @@
 **/livebuild
 **/fedora-ks
 **/livebuild.log
-**/remix-budgie.ks
+**/build.ks
 **/*.iso
+**/*.sum

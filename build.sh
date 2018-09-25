@@ -11,13 +11,13 @@ if ! rpm -q --quiet livecd-tools ; then
    {fedora,spin,l10n}-kickstarts pykickstart
 fi
 
-pwddir=$(dirname "$(readlink -f "$0")")
+PWD=$(dirname "$(readlink -f "$0")")
 
 ksflatten \
- --config $pwddir/kickstart.d/remix-budgie-live.ks \
- -o $pwddir/remix-budgie.ks --version F$VERSION
+ --config $PWD/kickstart.d/remix-budgie-live.ks \
+ -o $PWD/build.ks --version F$VERSION
 
-livecd-creator -c remix-budgie.ks \
+livecd-creator -c build.ks \
  --title="Fedora Budgie Remix" \
  --cache=/var/cache/live \
  --logfile=livebuild.log \
