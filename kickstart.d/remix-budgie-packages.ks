@@ -15,6 +15,7 @@ system-config-printer
 
 baobab
 chromium
+chromium-libs-media-freeworld
 dconf
 desktop-backgrounds-gnome
 evince
